@@ -38,7 +38,7 @@ const untrustedAsteroid: unknown = {
 	mass: 100
 };
 
-const trustedAteroid = filterAsteroid(Asteroid);
+const trustedAteroid = filterAsteroid(untrustedAsteroid);
 ```
 
 ### Manual
