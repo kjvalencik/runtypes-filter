@@ -133,8 +133,8 @@ export function validate<T, R extends Runtype<T>>(t: R): R {
 
 export default function CheckFilter<T, R extends Runtype<T>>(
 	t: R
-): (x: unknown) => T {
+): (x: unknown) => Static<R> {
 	const rt = validate(t);
 
-	return x => filter(rt, rt.check(x));
+	return <any>((x: unknown) => filter(rt, rt.check(x)));
 }
