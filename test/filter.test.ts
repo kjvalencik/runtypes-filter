@@ -6,15 +6,14 @@ import {
 	Lazy,
 	Literal,
 	Never,
+	Null,
 	Number,
 	Partial,
 	Record,
-	Runtype,
 	String,
 	Tuple,
 	Union,
-	ValidationError,
-	Void
+	ValidationError
 } from "runtypes";
 
 import FilterCheck, { filter } from "../src";
@@ -26,7 +25,7 @@ describe("FilterCheck", () => {
 		expect(FilterCheck(Boolean)(true)).toEqual(true);
 		expect(FilterCheck(Number)(5)).toEqual(5);
 		expect(FilterCheck(String)("a")).toEqual("a");
-		expect(FilterCheck(<Runtype<any>>Void)(null)).toEqual(null);
+		expect(FilterCheck(Null)(null)).toEqual(null);
 	});
 
 	it("should handle tuples", () => {

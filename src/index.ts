@@ -56,7 +56,7 @@ export function filter<T, R extends Runtype<T>>(t: R, x: T): T {
 		case "partial":
 		case "record":
 			return Object.keys(r.fields)
-				.filter(k => x.hasOwnProperty(k))
+				.filter(k => Object.prototype.hasOwnProperty.call(x, k))
 				.reduce(
 					(acc, k) => ({
 						...acc,
