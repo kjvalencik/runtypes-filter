@@ -13,7 +13,7 @@ import {
 	String,
 	Tuple,
 	Union,
-	ValidationError
+	ValidationError,
 } from "runtypes";
 
 import FilterCheck, { filter } from "../src";
@@ -44,7 +44,7 @@ describe("FilterCheck", () => {
 		const check = FilterCheck(
 			Partial({
 				a: String,
-				b: String
+				b: String,
 			})
 		);
 
@@ -59,7 +59,7 @@ describe("FilterCheck", () => {
 	});
 
 	it("should handle constraints", () => {
-		const check = FilterCheck(Number.withConstraint(n => n > 5));
+		const check = FilterCheck(Number.withConstraint((n) => n > 5));
 
 		expect(check(10)).toEqual(10);
 	});
@@ -83,7 +83,7 @@ describe("FilterCheck", () => {
 		const Tree: any = Lazy(() =>
 			Record({
 				name: String,
-				children: Array(Tree)
+				children: Array(Tree),
 			})
 		);
 
@@ -98,15 +98,15 @@ describe("FilterCheck", () => {
 						{
 							name: "leaf",
 							ignore: "me",
-							children: []
-						}
-					]
+							children: [],
+						},
+					],
 				},
 				{
 					name: "Top 2",
-					children: []
-				}
-			]
+					children: [],
+				},
+			],
 		});
 
 		expect(tree).toEqual({
@@ -117,15 +117,15 @@ describe("FilterCheck", () => {
 					children: [
 						{
 							name: "leaf",
-							children: []
-						}
-					]
+							children: [],
+						},
+					],
 				},
 				{
 					name: "Top 2",
-					children: []
-				}
-			]
+					children: [],
+				},
+			],
 		});
 	});
 });

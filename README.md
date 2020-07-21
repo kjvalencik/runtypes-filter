@@ -28,14 +28,14 @@ import CheckFilter from "runtypes-filter";
 
 const Asteroid = Record({
 	type: Literal("asteroid"),
-	mass: Number
+	mass: Number,
 });
 
 const filterAsteroid = CheckFilter(Asteroid);
 
 const untrustedAsteroid: unknown = {
 	type: "asteroid",
-	mass: 100
+	mass: 100,
 };
 
 const trustedAteroid = filterAsteroid(untrustedAsteroid);
@@ -54,13 +54,13 @@ import { filter, validate } from "runtypes-filter";
 const Asteroid = validate(
 	Record({
 		type: Literal("asteroid"),
-		mass: Number
+		mass: Number,
 	})
 );
 
 const untrustedAsteroid: unknown = {
 	type: "asteroid",
-	mass: 100
+	mass: 100,
 };
 
 const trustedAsteroid = Asteroid.check(untrustedAsteroid);

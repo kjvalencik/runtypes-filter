@@ -8,7 +8,7 @@ const NotImplemented = Union(
 );
 
 const notImplementedTags = NotImplemented.alternatives.map(
-	x => x.fields.tag.value
+	(x) => x.fields.tag.value
 );
 
 type NotImplemented = Static<typeof NotImplemented>;
@@ -49,23 +49,22 @@ export function filter<T, R extends Runtype<T>>(t: R, x: T): T {
 			return Object.keys(x).reduce(
 				(acc, k) => ({
 					...acc,
-					[k]: filter(r.value, (x as any)[k])
+					[k]: filter(r.value, (x as any)[k]),
 				}),
 				<T>{}
 			);
-		case "partial":
 		case "record":
 			return Object.keys(r.fields)
-				.filter(k => Object.prototype.hasOwnProperty.call(x, k))
+				.filter((k) => Object.prototype.hasOwnProperty.call(x, k))
 				.reduce(
 					(acc, k) => ({
 						...acc,
-						[k]: filter(r.fields[k], (x as any)[k] as any)
+						[k]: filter(r.fields[k], (x as any)[k] as any),
 					}),
 					<T>{}
 				);
 		case "union":
-			const alt = r.alternatives.find(a => a.guard(x));
+			const alt = r.alternatives.find((a) => a.guard(x));
 
 			return filter(<any>alt, x);
 		case "constraint":
@@ -110,9 +109,8 @@ export function validate<T, R extends Runtype<T>>(t: R): R {
 				return r.components.forEach(check);
 			case "dictionary":
 				return check(r.value);
-			case "partial":
 			case "record":
-				return Object.keys(r.fields).forEach(k => check(r.fields[k]));
+				return Object.keys(r.fields).forEach((k) => check(r.fields[k]));
 			case "union":
 				return r.alternatives.forEach(check);
 			case "constraint":
@@ -136,5 +134,5 @@ export default function CheckFilter<T, R extends Runtype<T>>(
 ): (x: unknown) => Static<R> {
 	const rt = validate(t);
 
-	return x => filter(rt, rt.check(x)) as Static<R>;
+	return (x) => filter(rt, rt.check(x)) as Static<R>;
 }
