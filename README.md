@@ -10,7 +10,6 @@ they may not be safely cloned.
 - `InstanceOf`
 - `Intersect`
 - `Function`
-- `Unknown`
 
 ## Usage
 
