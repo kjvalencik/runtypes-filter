@@ -25,12 +25,22 @@ class UnreachableCaseError extends Error {
 	}
 }
 
-export function filter<T, R extends Runtype<T>>(t: R, x: T): T {
+function filterInternal<T, R extends Runtype<T>>(
+	t: R,
+	x: T,
+	parentContext: { isPartial: boolean }
+): T {
 	const r = t.reflect;
 
 	if (isNotImplemented(r)) {
 		throw new Error(`Type "${r.tag}" is not filterable`);
 	}
+
+	if (parentContext.isPartial && x === undefined) {
+		return x;
+	}
+
+	const context = { isPartial: r.tag === "record" && r.isPartial };
 
 	switch (r.tag) {
 		case "literal":
@@ -42,14 +52,16 @@ export function filter<T, R extends Runtype<T>>(t: R, x: T): T {
 		case "never":
 			return x;
 		case "array":
-			return (x as any).map((v: any) => filter(r.element, v));
+			return (x as any).map((v: any) => filterInternal(r.element, v, context));
 		case "tuple":
-			return (x as any).map((v: any, i: number) => filter(r.components[i], v));
+			return (x as any).map((v: any, i: number) =>
+				filterInternal(r.components[i], v, context)
+			);
 		case "dictionary":
 			return Object.keys(x).reduce(
 				(acc, k) => ({
 					...acc,
-					[k]: filter(r.value, (x as any)[k]),
+					[k]: filterInternal(r.value, (x as any)[k], context),
 				}),
 				<T>{}
 			);
@@ -59,23 +71,27 @@ export function filter<T, R extends Runtype<T>>(t: R, x: T): T {
 				.reduce(
 					(acc, k) => ({
 						...acc,
-						[k]: filter(r.fields[k], (x as any)[k] as any),
+						[k]: filterInternal(r.fields[k], (x as any)[k] as any, context),
 					}),
 					<T>{}
 				);
 		case "union":
 			const alt = r.alternatives.find((a) => a.guard(x));
 
-			return filter(<any>alt, x);
+			return filterInternal(<any>alt, x, context);
 		case "constraint":
-			return filter(<any>r.underlying, x);
+			return filterInternal(<any>r.underlying, x, context);
 		case "brand":
-			return filter(<any>r.entity, x);
+			return filterInternal(<any>r.entity, x, context);
 		// Exhaustiveness checking
 		/* istanbul ignore next */
 		default:
 			throw new UnreachableCaseError(r);
 	}
+}
+
+export function filter<T, R extends Runtype<T>>(t: R, x: T): T {
+	return filterInternal(t, x, { isPartial: false });
 }
 
 export function validate<T, R extends Runtype<T>>(t: R): R {

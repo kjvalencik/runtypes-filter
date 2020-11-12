@@ -45,10 +45,14 @@ describe("FilterCheck", () => {
 			Partial({
 				a: String,
 				b: String,
+				d: Array(String),
+				e: Tuple(Literal("a")),
 			})
 		);
 
-		expect(check({ a: "aaa", c: "ccc" })).toEqual({ a: "aaa" });
+		expect(check({ a: "aaa", c: "ccc", d: undefined, e: undefined })).toEqual({
+			a: "aaa",
+		});
 	});
 
 	it("should handle unions", () => {
