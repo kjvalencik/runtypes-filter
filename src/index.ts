@@ -3,8 +3,7 @@ import { Literal, Record, Runtype, Static, Union } from "runtypes";
 const NotImplemented = Union(
 	Record({ tag: Literal("instanceof") }),
 	Record({ tag: Literal("intersect") }),
-	Record({ tag: Literal("function") }),
-	Record({ tag: Literal("unknown") })
+	Record({ tag: Literal("function") })
 );
 
 const notImplementedTags = NotImplemented.alternatives.map(
@@ -40,6 +39,7 @@ export function filter<T, R extends Runtype<T>>(t: R, x: T): T {
 		case "void":
 		case "symbol":
 		case "never":
+		case "unknown":
 			return x;
 		case "array":
 			return (x as any).map((v: any) => filter(r.element, v));
@@ -102,6 +102,7 @@ export function validate<T, R extends Runtype<T>>(t: R): R {
 			case "string":
 			case "void":
 			case "symbol":
+			case "unknown":
 				return;
 			case "array":
 				return check(r.element);
