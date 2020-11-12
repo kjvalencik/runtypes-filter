@@ -29,14 +29,14 @@ function filterInternal<T, R extends Runtype<T>>(
 	x: T,
 	parentContext: { isPartial: boolean }
 ): T {
+	if (parentContext.isPartial && x === undefined) {
+		return x;
+	}
+
 	const r = t.reflect;
 
 	if (isNotImplemented(r)) {
 		throw new Error(`Type "${r.tag}" is not filterable`);
-	}
-
-	if (parentContext.isPartial && x === undefined) {
-		return x;
 	}
 
 	const context = { isPartial: r.tag === "record" && r.isPartial };

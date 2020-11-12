@@ -49,10 +49,13 @@ describe("FilterCheck", () => {
 				b: String,
 				d: Array(String),
 				e: Tuple(Literal("a")),
+				f: Union(Literal("a"), Literal("b")),
 			})
 		);
 
-		expect(check({ a: "aaa", c: "ccc", d: undefined, e: undefined })).toEqual({
+		expect(
+			check({ a: "aaa", c: "ccc", d: undefined, e: undefined, f: undefined })
+		).toEqual({
 			a: "aaa",
 		});
 	});
