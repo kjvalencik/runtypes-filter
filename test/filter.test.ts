@@ -13,6 +13,7 @@ import {
 	String,
 	Tuple,
 	Union,
+	Unknown,
 	ValidationError,
 } from "runtypes";
 
@@ -26,6 +27,7 @@ describe("FilterCheck", () => {
 		expect(FilterCheck(Number)(5)).toEqual(5);
 		expect(FilterCheck(String)("a")).toEqual("a");
 		expect(FilterCheck(Null)(null)).toEqual(null);
+		expect(FilterCheck(Unknown)({ a: "a", b: 1 })).toEqual({ a: "a", b: 1 });
 	});
 
 	it("should handle tuples", () => {
