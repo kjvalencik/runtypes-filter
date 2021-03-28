@@ -1,5 +1,6 @@
 import {
 	Array,
+	BigInt as BigIntT,
 	Boolean,
 	Dictionary,
 	Intersect,
@@ -8,6 +9,7 @@ import {
 	Never,
 	Null,
 	Number,
+	Optional,
 	Partial,
 	Record,
 	String,
@@ -24,6 +26,9 @@ describe("FilterCheck", () => {
 		expect(() => FilterCheck(Never)(null)).toThrowError(ValidationError);
 		expect(FilterCheck(Literal("a"))("a")).toEqual("a");
 		expect(FilterCheck(Boolean)(true)).toEqual(true);
+		expect(
+			FilterCheck(BigIntT)(BigInt("9007199254740993"))
+		).toMatchInlineSnapshot(`9007199254740993n`);
 		expect(FilterCheck(Number)(5)).toEqual(5);
 		expect(FilterCheck(String)("a")).toEqual("a");
 		expect(FilterCheck(Null)(null)).toEqual(null);
@@ -71,6 +76,20 @@ describe("FilterCheck", () => {
 		const check = FilterCheck(Number.withConstraint((n) => n > 5));
 
 		expect(check(10)).toEqual(10);
+	});
+
+	it("should handle optionals", () => {
+		const checkWrapper = FilterCheck(
+			Optional(Number.withConstraint((n) => n > 5))
+		);
+
+		expect(checkWrapper(10)).toEqual(10);
+
+		const checkChain = FilterCheck(
+			Number.optional().withConstraint((n) => typeof n === "undefined" || n > 5)
+		);
+
+		expect(checkChain(10)).toEqual(10);
 	});
 
 	it("should handle brands", () => {
