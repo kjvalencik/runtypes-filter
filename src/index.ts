@@ -44,6 +44,7 @@ function filterInternal<T, R extends Runtype<T>>(
 	switch (r.tag) {
 		case "literal":
 		case "boolean":
+		case "bigint":
 		case "number":
 		case "string":
 		case "void":
@@ -80,6 +81,7 @@ function filterInternal<T, R extends Runtype<T>>(
 
 			return filterInternal(<any>alt, x, context);
 		case "constraint":
+		case "optional":
 			return filterInternal(<any>r.underlying, x, context);
 		case "brand":
 			return filterInternal(<any>r.entity, x, context);
@@ -114,6 +116,7 @@ export function validate<T, R extends Runtype<T>>(t: R): R {
 			case "never":
 			case "literal":
 			case "boolean":
+			case "bigint":
 			case "number":
 			case "string":
 			case "void":
@@ -131,6 +134,7 @@ export function validate<T, R extends Runtype<T>>(t: R): R {
 			case "union":
 				return r.alternatives.forEach(check);
 			case "constraint":
+			case "optional":
 				return check(r.underlying);
 			case "brand":
 				return check(r.entity);
