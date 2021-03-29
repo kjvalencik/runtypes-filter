@@ -85,6 +85,9 @@ describe("FilterCheck", () => {
 
 		expect(checkWrapper(10)).toBe(10);
 		expect(checkWrapper(undefined)).toBeUndefined();
+		expect(() => checkWrapper(null)).toThrowErrorMatchingInlineSnapshot(
+			`"Expected number, but was null"`
+		);
 
 		const checkChain = FilterCheck(
 			Number.optional().withConstraint((n) => typeof n === "undefined" || n > 5)
@@ -92,6 +95,9 @@ describe("FilterCheck", () => {
 
 		expect(checkChain(10)).toBe(10);
 		expect(checkChain(undefined)).toBeUndefined();
+		expect(() => checkChain(null)).toThrowErrorMatchingInlineSnapshot(
+			`"Expected number, but was null"`
+		);
 
 		const checkRecord = FilterCheck(
 			Record({
@@ -102,6 +108,12 @@ describe("FilterCheck", () => {
 		expect(checkRecord({ a: 10 })).toStrictEqual({ a: 10 });
 		expect(checkRecord({})).toStrictEqual({});
 		expect(checkRecord(undefined)).toBeUndefined();
+		expect(() => checkRecord({ a: null })).toThrowErrorMatchingInlineSnapshot(
+			`"Expected number, but was null in a"`
+		);
+		expect(() => checkRecord(null)).toThrowErrorMatchingInlineSnapshot(
+			`"Expected { a?: number; }, but was null"`
+		);
 
 		const checkUnion = FilterCheck(Union(Number, Null).optional());
 
