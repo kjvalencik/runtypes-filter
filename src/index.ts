@@ -81,8 +81,11 @@ function filterInternal<T, R extends Runtype<T>>(
 
 			return filterInternal(<any>alt, x, context);
 		case "constraint":
-		case "optional":
 			return filterInternal(<any>r.underlying, x, context);
+		case "optional":
+			return typeof x === "undefined"
+				? x
+				: filterInternal(<any>r.underlying, x, context);
 		case "brand":
 			return filterInternal(<any>r.entity, x, context);
 		// Exhaustiveness checking
