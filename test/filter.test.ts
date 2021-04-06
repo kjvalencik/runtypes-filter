@@ -109,7 +109,7 @@ describe("FilterCheck", () => {
 		expect(checkRecord({})).toStrictEqual({});
 		expect(checkRecord(undefined)).toBeUndefined();
 		expect(() => checkRecord({ a: null })).toThrowErrorMatchingInlineSnapshot(
-			`"Expected number, but was null in a"`
+			`"Expected { a?: number; }, but was incompatible"`
 		);
 		expect(() => checkRecord(null)).toThrowErrorMatchingInlineSnapshot(
 			`"Expected { a?: number; }, but was null"`
